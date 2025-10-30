@@ -96,4 +96,30 @@ describe('UserCreateComponent', () => {
     const btnEl = submitButton.nativeElement as HTMLInputElement;
     expect(btnEl.value).toBe('Create User');
   });
+
+  it('should render the submit button with text "Create User"', () => {
+    const submitButton = fixture.debugElement.query(
+      By.css('.form__actions input[type="submit"]')
+    );
+
+    expect(submitButton).toBeTruthy();
+  });
+
+  it('should render the submit button with text "Create User"', () => {
+    const submitButton = fixture.debugElement.query(
+      By.css('.form__actions input[type="submit"]')
+    );
+
+    const btnEl = submitButton.nativeElement as HTMLInputElement;
+    expect(btnEl.value).toBe('Create User');
+  });
+
+  it('should NOT render the submit button with text "Submit"', () => {
+    const submitButton = fixture.debugElement.query(
+      By.css('.form__actions input[type="submit"]')
+    );
+
+    const btnEl = submitButton.nativeElement as HTMLInputElement;
+    expect(btnEl.value).not.toBe('Submit');
+  });
 });
