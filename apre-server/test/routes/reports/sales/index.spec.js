@@ -153,14 +153,83 @@ describe("Apre Sales Report API - Sales by Region", () => {
 });
 
 describe("Apre Sales Report API - Sales by Product", () => {
-  beforeEach(() => {
-    mongo.mockClear();
-  });
   const URL = "/api/reports/sales/sales-by-product";
 
+  beforeEach(() => {
+    mongo.mockClear();
+
+    // ✅ Proper mock for Mongo helper
+    mongo.mockImplementation(async (operations) => {
+      const db = {
+        collection: jest.fn().mockReturnThis(),
+        aggregate: jest.fn().mockReturnValue({
+          toArray: jest.fn().mockResolvedValue([
+            {
+              _id: "1",
+              date: "2025-10-30",
+              region: "North",
+              product: "Widget123",
+              category: "Tools",
+              customer: "Acme Corp",
+              salesperson: "Jane Doe",
+              channel: "Online",
+              amount: 199.99,
+            },
+            {
+              _id: "2",
+              date: "2025-10-29",
+              region: "South",
+              product: "Gadget-Pro",
+              category: "Electronics",
+              customer: "TechWorld",
+              salesperson: "John Smith",
+              channel: "In-store",
+              amount: 499.5,
+            },
+          ]),
+        }),
+      };
+      await operations(db);
+    });
+  });
+
   it("responds 200, application/json, and returns an array of sales by product data", async () => {
-    const res = await request(app).get(`${URL}`);
+    const res = await request(app).get(`${URL}/Widget123`);
+
     expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch(/application\/json/);
     expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.length).toBe(2);
+
+    expect(res.body[0]).toHaveProperty("product");
+    expect(res.body[0]).toHaveProperty("amount");
+  });
+
+  it("responds 200 and an empty array when the product has no matching sales", async () => {
+    mongo.mockImplementationOnce(async (operations) => {
+      const db = {
+        collection: jest.fn().mockReturnThis(),
+        aggregate: jest.fn().mockReturnValue({
+          toArray: jest.fn().mockResolvedValue([]),
+        }),
+      };
+      await operations(db);
+    });
+
+    const res = await request(app).get(`${URL}/__no_such_product__`);
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch(/application\/json/);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.length).toBe(0);
+  });
+
+  it("handles product names with spaces/special characters (URL-encoded) and returns 200", async () => {
+    const product = encodeURIComponent("Widget (123)+Pro");
+    const res = await request(app).get(`${URL}/${product}`);
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch(/application\/json/);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.length).toBeGreaterThanOrEqual(1);
   });
 });

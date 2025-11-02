@@ -81,18 +81,50 @@ router.get("/regions/:region", (req, res, next) => {
   }
 });
 
-router.get("/sales-by-product/:product?", (req, res, next) => {
+/**
+ * @description
+ *
+ * GET /sales-by-product/:product
+ *
+ * Fetches sales data for a specific product, grouped by salesperson.
+ *
+ * Example:
+ * fetch('/sales-by-product/Widget-123')
+ *  .then(response => response.json())
+ *  .then(data => console.log(data));
+ */
+router.get("/sales-by-product/:product", (req, res, next) => {
   try {
     mongo(async (db) => {
-      const allSales = await db
+      const salesReportByProduct = await db
         .collection("sales")
-        .aggregate([{ $match: {} }])
+        .aggregate([
+          {
+            $match: {
+              product: { $regex: new RegExp(`^${req.params.product}$`, "i") },
+            },
+          },
+          {
+            $group: {
+              _id: "$salesperson",
+              totalSales: { $sum: "$amount" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              salesperson: "$_id",
+              totalSales: 1,
+            },
+          },
+          { $sort: { salesperson: 1 } },
+        ])
         .toArray();
 
-      console.log(allSales.length, "allsalesdata");
-      res.status(200).json(allSales);
+      res.status(200).send(salesReportByProduct);
     }, next);
   } catch (err) {
+    console.error("Error getting sales data for product:", err);
     next(err);
   }
 });
