@@ -14,95 +14,129 @@ import { CookieService } from 'ngx-cookie-service';
   standalone: true,
   imports: [RouterOutlet, RouterLink],
   template: `
-   <div class="app">
-    <nav class="app__side-menu">
-      <div class="app__side-menu-header">
-        <h2 class="app__side-menu-title">{{ title }}</h2>
-      </div>
-      <a class="app__side-menu-link" routerLink="/">Dashboard</a>
-      <a class="app__side-menu-link" routerLink="/support">Support</a>
-      <a class="app__side-menu-link" routerLink="/faq">FAQ</a>
+    <div class="app">
+      <nav class="app__side-menu">
+        <div class="app__side-menu-header">
+          <h2 class="app__side-menu-title">{{ title }}</h2>
+        </div>
+        <a class="app__side-menu-link" routerLink="/">Dashboard</a>
+        <a class="app__side-menu-link" routerLink="/support">Support</a>
+        <a class="app__side-menu-link" routerLink="/faq">FAQ</a>
 
-      @if (sessionUser.role === 'admin') {
-        <div class="app__side-menu-section" (click)="toggleSection($event, 'userManagement')">
-        <div class="app__side-menu-link">User Management</div>
+        @if (sessionUser.role === 'admin') {
+        <div
+          class="app__side-menu-section"
+          (click)="toggleSection($event, 'userManagement')"
+        >
+          <div class="app__side-menu-link">User Management</div>
           @if (sections.userManagement) {
-            <div class="app__side-menu-sub-links">
-              @for (link of userManagement; track link) {
-                <a class="app__side-menu-link app__side-menu-sub-link" [routerLink]="link.url">{{ link.name }}</a>
-              }
-            </div>
+          <div class="app__side-menu-sub-links">
+            @for (link of userManagement; track link) {
+            <a
+              class="app__side-menu-link app__side-menu-sub-link"
+              [routerLink]="link.url"
+              >{{ link.name }}</a
+            >
+            }
+          </div>
           }
         </div>
-      }
+        }
 
-      <div class="app__side-menu-section" (click)="toggleSection($event, 'salesReports')">
-        <div class="app__side-menu-link">Sales Reports</div>
-        @if (sections.salesReports) {
+        <div
+          class="app__side-menu-section"
+          (click)="toggleSection($event, 'salesReports')"
+        >
+          <div class="app__side-menu-link">Sales Reports</div>
+          @if (sections.salesReports) {
           <div class="app__side-menu-sub-links">
             @for (link of salesReports; track link) {
-              <a class="app__side-menu-link app__side-menu-sub-link" [routerLink]="link.url">{{ link.name }}</a>
+            <a
+              class="app__side-menu-link app__side-menu-sub-link"
+              [routerLink]="link.url"
+              >{{ link.name }}</a
+            >
             }
           </div>
-        }
-      </div>
+          }
+        </div>
 
-      <div class="app__side-menu-section" (click)="toggleSection($event, 'agentPerformanceReports')">
-        <div class="app__side-menu-link">Agent Performance Reports</div>
+        <div
+          class="app__side-menu-section"
+          (click)="toggleSection($event, 'agentPerformanceReports')"
+        >
+          <div class="app__side-menu-link">Agent Performance Reports</div>
 
-        @if (sections.agentPerformanceReports) {
+          @if (sections.agentPerformanceReports) {
           <div class="app__side-menu-sub-links">
             @for (link of agentPerformanceReports; track link) {
-              <a class="app__side-menu-link app__side-menu-sub-link" [routerLink]="link.url">{{ link.name }}</a>
+            <a
+              class="app__side-menu-link app__side-menu-sub-link"
+              [routerLink]="link.url"
+              >{{ link.name }}</a
+            >
             }
           </div>
-        }
-      </div>
+          }
+        </div>
 
-      <div class="app__side-menu-section" (click)="toggleSection($event, 'customerFeedbackReports')">
-        <div class="app__side-menu-link">Customer Feedback Reports</div>
+        <div
+          class="app__side-menu-section"
+          (click)="toggleSection($event, 'customerFeedbackReports')"
+        >
+          <div class="app__side-menu-link">Customer Feedback Reports</div>
 
-        @if (sections.customerFeedbackReports) {
+          @if (sections.customerFeedbackReports) {
           <div class="app__side-menu-sub-links">
             @for (link of customerFeedbackReports; track link) {
-              <a class="app__side-menu-link app__side-menu-sub-link" [routerLink]="link.url">{{ link.name }}</a>
+            <a
+              class="app__side-menu-link app__side-menu-sub-link"
+              [routerLink]="link.url"
+              >{{ link.name }}</a
+            >
             }
           </div>
-        }
-      </div>
-    </nav>
+          }
+        </div>
+      </nav>
 
-    <div class="app__main-content">
-      <header class="app__header">
-        <div class="app__header-content">
-          <div class="app__header-title"></div>
-          <div class="app__user-profile" (click)="toggleDropdown()">
-            <div class="app__user-avatar">{{ userInitial }}</div>
-            <div class="app__user-arrow" [class.up]="dropdownVisible">&#9660;</div>
-            <div class="app__user-dropdown" [class.show]="dropdownVisible">
-              <span>Welcome {{ sessionUser.username }}!</span>
+      <div class="app__main-content">
+        <header class="app__header">
+          <div class="app__header-content">
+            <div class="app__header-title"></div>
+            <div class="app__user-profile" (click)="toggleDropdown()">
+              <div class="app__user-avatar">{{ userInitial }}</div>
+              <div class="app__user-arrow" [class.up]="dropdownVisible">
+                &#9660;
+              </div>
+              <div class="app__user-dropdown" [class.show]="dropdownVisible">
+                <span>Welcome {{ sessionUser.username }}!</span>
 
-              <hr class="lighter-hr" />
+                <hr class="lighter-hr" />
 
-              @if (sessionUser.role === 'admin') {
-                <a class="app__user-dropdown-link" routerLink="/demo">Styling Demo</a>
-              }
+                @if (sessionUser.role === 'admin') {
+                <a class="app__user-dropdown-link" routerLink="/demo"
+                  >Styling Demo</a
+                >
+                }
 
-              <a class="app__user-dropdown-link" (click)="signout();">Sign Out</a>
-              <!-- Add more links as needed -->
+                <a class="app__user-dropdown-link" (click)="signout()"
+                  >Sign Out</a
+                >
+                <!-- Add more links as needed -->
+              </div>
             </div>
           </div>
-        </div>
-      </header>
-      <main class="app__main">
-        <router-outlet></router-outlet>
-      </main>
-    </div>
+        </header>
+        <main class="app__main">
+          <router-outlet></router-outlet>
+        </main>
+      </div>
 
-    <footer class="app__footer">
-      &copy; 2024 Agent Performance Reporting Engine (APRE)
-    </footer>
-  </div>
+      <footer class="app__footer">
+        &copy; 2024 Agent Performance Reporting Engine (APRE)
+      </footer>
+    </div>
   `,
   styles: `
     .app {
@@ -281,7 +315,7 @@ import { CookieService } from 'ngx-cookie-service';
       height: 1px;
       background: #e0e0e0;
     }
-  `
+  `,
 })
 export class MainLayoutComponent {
   title = 'APRE'; // Title of the application displayed in the side menu
@@ -294,7 +328,7 @@ export class MainLayoutComponent {
     salesReports: false,
     agentPerformanceReports: false,
     customerFeedbackReports: false,
-    userManagement: false
+    userManagement: false,
   };
 
   // Array to hold the user management links in the side menu. Must be an admin to see these links
@@ -306,25 +340,37 @@ export class MainLayoutComponent {
   // Array to hold the sales reports links in the side menu. These links are visible to all users
   salesReports = [
     { name: 'Sales by Region', url: '/reports/sales/sales-by-region' },
-    { name: 'Sales by Region - Tabular', url: '/reports/sales/sales-by-region-tabular' },
+    { name: 'Sales by Product', url: '/reports/sales/sales-by-product' },
+    {
+      name: 'Sales by Region - Tabular',
+      url: '/reports/sales/sales-by-region-tabular',
+    },
     // Add more reports as needed
   ];
 
   agentPerformanceReports = [
-    { name: 'Call Duration by Date Range', url: '/reports/agent-performance/call-duration-by-date-range' }
+    {
+      name: 'Call Duration by Date Range',
+      url: '/reports/agent-performance/call-duration-by-date-range',
+    },
     // Add more reports as needed
   ];
 
   customerFeedbackReports = [
-    { name: 'Channel Rating by Month', url: '/reports/customer-feedback/channel-rating-by-month' }
+    {
+      name: 'Channel Rating by Month',
+      url: '/reports/customer-feedback/channel-rating-by-month',
+    },
     // Add more reports as needed
   ];
 
   constructor(private cookieService: CookieService, private router: Router) {
     this.sessionUser = JSON.parse(this.cookieService.get('sessionUser'));
-    this.userInitial = this.sessionUser ? this.sessionUser.username.slice(0, 1) : '';
+    this.userInitial = this.sessionUser
+      ? this.sessionUser.username.slice(0, 1)
+      : '';
     this.userInitial = this.userInitial.toUpperCase();
-    console.log(this.userInitial)
+    console.log(this.userInitial);
   }
 
   // Function to toggle the user dropdown menu
@@ -335,13 +381,16 @@ export class MainLayoutComponent {
   // Function to toggle the visibility of the sub-sections in the side menu
   toggleSection(event: MouseEvent, section: string) {
     const target = event.target as HTMLElement;
-    if (target.classList.contains('app__side-menu-link') && !target.classList.contains('app__side-menu-sub-link')) {
+    if (
+      target.classList.contains('app__side-menu-link') &&
+      !target.classList.contains('app__side-menu-sub-link')
+    ) {
       this.sections[section] = !this.sections[section];
     }
   }
 
   signout() {
     this.cookieService.deleteAll();
-    this.router.navigate(['/signin'])
+    this.router.navigate(['/signin']);
   }
 }
