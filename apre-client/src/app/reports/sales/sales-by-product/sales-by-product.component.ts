@@ -23,9 +23,9 @@ import { TableComponent } from '../../../shared/table/table.component';
           <label for="product">Select Product:</label>
           <select class="select" id="product" formControlName="product">
             <option value="" disabled>Select a product</option>
-            <option value="Widget123">Widget123</option>
-            <option value="Gadget-Pro">Gadget-Pro</option>
-            <option value="SuperTool">SuperTool</option>
+            <option value="Fitness Tracker">Fitness Tracker</option>
+            <option value="Office Chair Deluxe">Office Chair Deluxe</option>
+            <option value="Laptop Pro 15">Laptop Pro 15</option>
           </select>
         </div>
 
@@ -43,22 +43,8 @@ import { TableComponent } from '../../../shared/table/table.component';
         <app-table
           [title]="'Sales Data by Product'"
           [data]="salesData"
-          [headers]="[
-            'region',
-            'product',
-            'customer',
-            'salesperson',
-            'channel',
-            'amount'
-          ]"
-          [sortableColumns]="[
-            'region',
-            'product',
-            'customer',
-            'salesperson',
-            'channel',
-            'amount'
-          ]"
+          [headers]="['totalSales', 'salesperson']"
+          [sortableColumns]="['totalSales', 'salesperson']"
         ></app-table>
       </div>
       } @if (salesData.length === 0) {

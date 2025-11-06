@@ -99,11 +99,7 @@ router.get("/sales-by-product/:product", (req, res, next) => {
       const salesReportByProduct = await db
         .collection("sales")
         .aggregate([
-          {
-            $match: {
-              product: { $regex: new RegExp(`^${req.params.product}$`, "i") },
-            },
-          },
+          { $match: { product: req.params.product } },
           {
             $group: {
               _id: "$salesperson",
