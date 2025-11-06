@@ -104,6 +104,7 @@ router.get("/sales-by-product/:product", (req, res, next) => {
             $group: {
               _id: "$salesperson",
               totalSales: { $sum: "$amount" },
+              product: { $first: "$product" },
             },
           },
           {
@@ -111,6 +112,7 @@ router.get("/sales-by-product/:product", (req, res, next) => {
               _id: 0,
               salesperson: "$_id",
               totalSales: 1,
+              product: 1,
             },
           },
           { $sort: { salesperson: 1 } },

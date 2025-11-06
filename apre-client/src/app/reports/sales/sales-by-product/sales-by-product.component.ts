@@ -43,8 +43,8 @@ import { TableComponent } from '../../../shared/table/table.component';
         <app-table
           [title]="'Sales Data by Product'"
           [data]="salesData"
-          [headers]="['totalSales', 'salesperson']"
-          [sortableColumns]="['totalSales', 'salesperson']"
+          [headers]="['salesperson', 'product', 'totalSales']"
+          [sortableColumns]="['salesperson', 'product', 'totalSales']"
         ></app-table>
       </div>
       } @if (salesData.length === 0) {
