@@ -8,9 +8,8 @@ describe('CalendarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CalendarComponent]
-    })
-    .compileComponents();
+      imports: [CalendarComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;
@@ -66,4 +65,14 @@ describe('CalendarComponent', () => {
     expect(component.isInvalidDate).toBeTrue();
     expect(inputElement.classList).toContain('input--invalid');
   });
+
+  // it('should display the correct placeholder on the button', () => {
+  //   const compiled = fixture.nativeElement as HTMLElement;
+  //   const buttonElement = compiled.querySelector(
+  //     '.open-calendar-btn'
+  //   ) as HTMLButtonElement;
+
+  //   expect(buttonElement).toBeTruthy();
+  //   expect(buttonElement.getAttribute('placeholder')).toBe('Select a date');
+  // });
 });

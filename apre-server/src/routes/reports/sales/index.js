@@ -127,4 +127,73 @@ router.get("/sales-by-product/:product", (req, res, next) => {
   }
 });
 
+router.get("/channel-rating-by-month/:month", (req, res, next) => {
+  try {
+    const { month } = req.params;
+
+    if (!month) {
+      return next(createError(400, "month parameter is required"));
+    }
+
+    mongo(async (db) => {
+      const data = await db
+        .collection("customerFeedback")
+        .aggregate([
+          {
+            $addFields: {
+              date: { $toDate: "$date" },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                channel: "$channel",
+                month: { $month: "$date" },
+              },
+              ratingAvg: { $avg: "$rating" },
+            },
+          },
+          {
+            $match: {
+              "_id.month": Number(month),
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.channel",
+              ratingAvg: { $push: "$ratingAvg" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              channel: "$_id",
+              ratingAvg: 1,
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              channels: { $push: "$channel" },
+              ratingAvg: { $push: "$ratingAvg" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              channels: 1,
+              ratingAvg: 1,
+            },
+          },
+        ])
+        .toArray();
+
+      res.send(data);
+    }, next);
+  } catch (err) {
+    console.error("Error in /channel-rating-by-month/:month", err);
+    next(err);
+  }
+});
+
 module.exports = router;
