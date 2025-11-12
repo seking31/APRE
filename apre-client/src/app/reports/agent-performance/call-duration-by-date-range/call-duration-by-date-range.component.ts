@@ -25,6 +25,7 @@ import { environment } from '../../../../environments/environment';
           </div>
           <div class="calendar-form__item">
             <label class="calendar-form__label" for="endDate">End Date:</label>
+            <span class="required">*</span>
             <app-calendar
               (dateSelected)="onEndDateSelected($event)"
             ></app-calendar>
@@ -55,6 +56,11 @@ import { environment } from '../../../../environments/environment';
     </div>
   `,
   styles: `
+   .required{
+   color:red;
+   padding: 10px;
+   }
+
     .calendar-form {
       width: 50%;
       background: #fff;
