@@ -97,7 +97,6 @@ router.get("/channel-rating-by-month", (req, res, next) => {
 router.get("/channel-rating-by-month/:month", (req, res, next) => {
   try {
     const { month } = req.params;
-
     mongo(async (db) => {
       const data = await db
         .collection("customerFeedback")
@@ -135,6 +134,44 @@ router.get("/channel-rating-by-month/:month", (req, res, next) => {
     }, next);
   } catch (err) {
     console.error("Error in /channel-rating-by-month/:month", err);
+    next(err);
+  }
+});
+
+router.get("/channel-rating-by-year/:year", (req, res, next) => {
+  try {
+    const year = req.params.year;
+
+    if (isNaN(year)) {
+      return next(createError(400, "year must be an integer"));
+    }
+
+    mongo(async (db) => {
+      const data = await db
+        .collection("customerFeedback")
+        .aggregate([
+          { $addFields: { date: { $toDate: "$date" } } },
+          {
+            $group: {
+              _id: { channel: "$channel", year: { $year: "$date" } },
+              ratingAvg: { $avg: "$rating" },
+            },
+          },
+          { $match: { "_id.year": Number(year) } },
+          {
+            $project: {
+              _id: 0,
+              channel: "$_id.channel",
+              ratingAvg: 1,
+            },
+          },
+        ])
+        .toArray();
+
+      res.send(data);
+    }, next);
+  } catch (err) {
+    console.error("Error in /channel-rating-by-month/:year", err);
     next(err);
   }
 });
